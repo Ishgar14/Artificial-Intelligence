@@ -1,5 +1,4 @@
 import random
-from re import L
 DEBUG = False
 
 EMPTY = 0
@@ -21,13 +20,7 @@ visual_to_actual = {
 actual_to_visual = {val: key for key, val in visual_to_actual.items()}
 
 # this function takes *visual* index of a slot and inserts value into it
-def put(index: int, val: int, original: bool = False) -> None:
-    if original:
-        if not (0 <= index <= 8):
-            raise IndexError("Index out of bounds")
-        board_array[index] = val
-        return
-    
+def put(index: int, val: int) -> None:
     if not (1 <= index <= 9):
         raise IndexError("Index out of bounds")
 
@@ -45,12 +38,12 @@ def accept_characters() -> None:
         COMPUTER_CHARACTER = 'O'
         return
 
-    PLAYER_CHARACTER = input("Pick your character (O/X): ")
+    PLAYER_CHARACTER = input("Pick your character (O/X): ").upper()
 
-    if PLAYER_CHARACTER.upper() == 'X':
+    if PLAYER_CHARACTER == 'X':
         PLAYER_CHARACTER = 'X'
         COMPUTER_CHARACTER = 'O'
-    elif PLAYER_CHARACTER.upper() == 'O':
+    elif PLAYER_CHARACTER == 'O':
         PLAYER_CHARACTER = 'O'
         COMPUTER_CHARACTER = 'X'
     else:
@@ -98,11 +91,9 @@ def game_status():
         return GAME_TIE, None
     return GAME_ONGOING, None
 
-def get_slots_of(character: str, display_mapped: bool = True) -> list:
-    if display_mapped:
-        return [actual_to_visual[i + 1] for i in range(9) if board_array[i] == character]
-    else:
-        return [i for i in range(9) if board_array[i] == character]
+# This function returns visual indices of all `character`s present on board
+def get_slots_of(character: str) -> list:
+    return [actual_to_visual[i + 1] for i in range(9) if board_array[i] == character]
 
 
 # This function computes computers moves and returns (visual) index of new move
@@ -115,9 +106,9 @@ def get_computer_move() -> int:
     human_places = get_slots_of(PLAYER_CHARACTER)
 
     if len(human_places) == 2:
-        block_human = 15 - (human_places[0] + human_places[1])
-        if 0 <= block_human - 1 <= 8 and board_array[visual_to_actual[block_human] - 1] == EMPTY:
-            return block_human
+        block_visual_human = 15 - (human_places[0] + human_places[1])
+        if 1 <= block_visual_human <= 9 and board_array[visual_to_actual[block_visual_human] - 1] == EMPTY:
+            return block_visual_human
 
     # if computer has less than 1 move, randomly return second move
     if len(computer_places) <= 1:
@@ -140,7 +131,7 @@ def get_computer_move() -> int:
             # now computer cant win because place is already occupied by player
             # but it can stop player from winning
             visual_move = 15 - (human_places[0] + human_places[1])
-            if 0 < visual_move < 9:
+            if 1 <= visual_move <= 9:
                 return visual_move
     
     # If we couldn't win uptil now then we definitely wont win
@@ -173,7 +164,7 @@ def get_computer_move() -> int:
 
 def main() -> None:
     accept_characters()
-    turn = True # True = player's turn, False = computers's turn
+    turn = True # True -> player's turn, False -> computers's turn
     threats = [
         "Please enter a valid index 😊",
         "Enter a valid index 😶",
