@@ -114,9 +114,6 @@ def display_board(board: list, special: bool = True) -> None:
             print()
         return
     
-    # Solid: █   ⬛
-    # Empty: ░   ⬜
-    # Queen: ♕  👑
     for i in range(len(board)):
         solid = i % 2 == 0
         for j in range(len(board)):
@@ -133,9 +130,8 @@ def display_board(board: list, special: bool = True) -> None:
 def main() -> None:
     size  = int(input("Enter size of chessboard: "))
     board = generate(size)
-    solve(board)
 
-    if sum([sum(row) for row in board]) != len(board):
+    if solve(board) == STUCK:
         print("There are no valid queen positions for given dimensions of board")
         return
 

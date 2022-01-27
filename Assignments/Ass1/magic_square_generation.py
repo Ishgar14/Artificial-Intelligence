@@ -60,7 +60,6 @@ def display(board: list) -> None:
     for row in board:
         for col in row:
             print('{:5}'.format(col), end='')
-
         print()
 
 
@@ -70,6 +69,7 @@ def main():
         if size % 2 == 0:
             print("Please type an odd number!")
             continue
+
         board = generate(size)
         display(board)
         break
