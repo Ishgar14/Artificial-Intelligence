@@ -64,22 +64,18 @@ class Node:
         self.children: list[Node] = []
 
 def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
-    if maxdepth == 0 or node.jug[0] < 0 or node.jug[1] < 0:
+    if maxdepth == 0:
         return False
 
     operations = get_available_operations(node.jug)
-    # print("\n\nAvailable operations for", node.jug, "are", operations)
-    # (0, 0) -> (0, 3) -> (3, 0) -> (3, 3) -> (4, 2) -> (0, 2)
     for op in operations:
         child = op(node.jug)
         
         if child == GOAL:
-            # print(child)
             RESULT.append(GOAL)
             return True
         
         if child in previous:
-            # print("Failed at", node.jug, "on", op)
             continue
         else:
             previous.add(child)
@@ -87,14 +83,12 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
 
         node.children.append(Node(child))
         if grow_tree(node.children[-1], previous, maxdepth - 1):
-            # print(node.children[-1].jug)
             RESULT.append(node.children[-1].jug)
             return True
         else:
             node.children.pop()
             pass
     
-    # print("Failed at", node.jug)
     return False
 
 def main():
