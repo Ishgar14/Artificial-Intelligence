@@ -97,9 +97,10 @@ def computer_move(board) -> None:
         if(score > bestScore):
             bestScore = score
             bestMove = key
+            print(f"Computer found {bestMove} with score {bestScore}")
 
     board[bestMove] = COMPUTER_CHARACTER
-    print(f"Computer picked {bestMove}")
+    print(f"Computer picked {bestMove} with score {bestScore}")
 
 def heuristic(board: dict[int, str]) -> int:
     if is_winner(board, COMPUTER_CHARACTER) :
@@ -113,7 +114,8 @@ def heuristic(board: dict[int, str]) -> int:
     
 
 def minimax(board: dict[int, str], maximise: bool) -> int:
-    if val := heuristic(board):
+    val = heuristic(board)
+    if val is not None:
         return val
 
     if maximise:
@@ -153,7 +155,7 @@ def get_characters():
         COMPUTER_CHARACTER = 'X'
 
 def main(board):
-    turn = True
+    turn = PLAYER_CHARACTER != 'X'
     while has_empty_slots(board) or not has_winner(board):
         if turn:
             computer_move(board)
