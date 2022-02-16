@@ -136,7 +136,7 @@ def get_computer_move():
         if score > best_score:
             best_score = score
             best_move = key
-            print(f"Computer found move {best_move} with score {best_score}")
+        print(f"Computer found move {best_move} with score {best_score}")
 
     print(f"Computer picks move {best_move} with score {best_score}")
     putchar(COMPUTER_CHARACTER, best_move)
