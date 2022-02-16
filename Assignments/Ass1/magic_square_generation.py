@@ -20,6 +20,8 @@ def generate(size: int) -> list:
     square[row][col] = counter
 
     while counter != size ** 2:
+        print("\n", f" Step {counter} ".center(20, '='), sep='')
+        display(square)
         counter       += 1
         cyclic_row    = row - 1
         cyclic_column = col + 1
@@ -71,6 +73,7 @@ def main():
             continue
 
         board = generate(size)
+        print("\n", f" Step {size ** 2} ".center(20, '='))
         display(board)
         break
 
