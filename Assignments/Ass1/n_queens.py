@@ -1,6 +1,8 @@
 STUCK = 0
 DONE  = 1
 
+steps = 0
+
 def generate(size: int) -> list:
     EMPTY  = 0
     square = []
@@ -83,23 +85,42 @@ def get_all_safe_spots(board: list, row: int) -> list:
 def solve(board: list, row: int = 0) -> int:
     if row >= len(board):
         return DONE
+    
+    global steps
+    print("\n", f" Step {steps} ".center(20, '='))
+    display_board(board)
+    steps += 1
 
     spots = get_all_safe_spots(board, row)
     if len(spots) == 0:
+        print("No safe spots left for current queen!")
         return STUCK
 
-    for spot in spots:
+    for i in range(len(board)):
+        if i not in spots:
+            print(f"Skipping column {i + 1} because it is not safe")
+            continue
+
+        spot = i
         board[row][spot] = 1
 
         # If we can't place next queen then backtrack and select next position for current queen
         if solve(board, row + 1) == STUCK:
+            print(f"Backtracking from row {row + 1} column {spot + 1} ..")
             board[row][spot] = 0
+        else:
+            # If every position of queen is filled then its done
+            if sum([sum(row) for row in board]) == len(board):
+                print("\n", f" Step {steps} ".center(20, '='))
+                display_board(board)
+                exit()
 
     # If every position of queen is filled then its done
     if sum([sum(row) for row in board]) == len(board):
         return DONE
     else:
         # Otherwise backtrack
+        print(f"Backtracking from row {row + 1} column {spot + 1} ...")
         return STUCK
             
 
@@ -132,9 +153,10 @@ def main() -> None:
     board = generate(size)
 
     if solve(board) == STUCK:
-        print("There are no valid queen positions for given dimensions of board")
+        print("\nThere are no valid queen positions for given dimensions of board")
         return
 
+    print("\n", " Finally ".center(20, '='))
     display_board(board, True)
 
 if __name__ == '__main__':
