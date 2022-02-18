@@ -58,10 +58,21 @@ def get_available_operations(jug):
 
     return operations
 
+def get_operation_name(operation) -> str:
+    return {
+        fill_left: 'fill left jug',
+        fill_right: 'fill right jug',
+        empty_left: 'empty left jug',
+        empty_right: 'empty right jug',
+        move_left_to_right: 'pour left jug into right jug',
+        move_right_to_left: 'pour right jug into left jug',
+    }[operation]
+
 class Node:
-    def __init__(self, jug: tuple[int, int]) -> None:
+    def __init__(self, jug: tuple[int, int], operation_name: str = None) -> None:
         self.jug = jug
         self.children: list[Node] = []
+        self.operation_name = operation_name
 
 def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
     if maxdepth == 0:
@@ -72,7 +83,7 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
         child = op(node.jug)
         
         if child == GOAL:
-            RESULT.append(GOAL)
+            RESULT.append(Node(GOAL, get_operation_name(op)))
             return True
         
         if child in previous:
@@ -81,9 +92,9 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
             previous.add(child)
             pass
 
-        node.children.append(Node(child))
+        node.children.append(Node(child, get_operation_name(op)))
         if grow_tree(node.children[-1], previous, maxdepth - 1):
-            RESULT.append(node.children[-1].jug)
+            RESULT.append(node.children[-1])
             return True
         else:
             node.children.pop()
@@ -95,9 +106,11 @@ def main():
     seed = Node((0, 0))
 
     if grow_tree(seed):
-        print("The full path is \n(0, 0)", end='')
-        for path in reversed(RESULT):
-            print(' ->', path, end='')
+        print("The full path is \nFrom (0, 0)")
+        result = list(reversed(RESULT))
+        for i, node in enumerate(result):
+            print(f'Step {i + 1}   {node.operation_name.ljust(30)} => {node.jug}')
+            
     else:
         print("Could not reach the goal", GOAL)
 

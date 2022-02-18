@@ -58,10 +58,21 @@ def get_available_operations(jug):
 
     return operations
 
+def get_operation_name(operation) -> str:
+    return {
+        fill_left: 'fill left jug',
+        fill_right: 'fill right jug',
+        empty_left: 'empty left jug',
+        empty_right: 'empty right jug',
+        move_left_to_right: 'pour left jug into right jug',
+        move_right_to_left: 'pour right jug into left jug',
+    }[operation]
+
 class Node:
-    def __init__(self, jug: tuple[int, int], parent = None) -> None:
+    def __init__(self, jug: tuple[int, int], parent = None, operation_name: str = None) -> None:
         self.jug = jug
         self.parent = parent
+        self.operation_name = operation_name
 
 def grow_tree(parent: Node, previous = {(0, 0)}) -> bool:
     queue = [parent]
@@ -75,7 +86,7 @@ def grow_tree(parent: Node, previous = {(0, 0)}) -> bool:
         # Assign the child nodes to parent
         for op in operations:
             child_jug = op(node.jug)
-            child = Node(child_jug, node)
+            child = Node(child_jug, node, get_operation_name(op))
 
             if child_jug == GOAL:
                 RESULT.append(child)
@@ -97,14 +108,17 @@ def main():
         print("The full path is")
         for endpoint in RESULT:
             path = []
+            operations: list[str] = []
             while endpoint.parent:
                 path.append(endpoint.jug)
+                operations.append(endpoint.operation_name)
                 endpoint = endpoint.parent
             
-            path = reversed(path)
-            print("(0, 0)", end='')
-            for p in path:
-                print(' ->', p, end='')
+            path = list(reversed(path))
+            operations = list(reversed(operations))
+            print("From (0, 0)")
+            for i, _ in enumerate(path):
+                print(f'Step {i + 1}   {operations[i].ljust(30)} => {path[i]}')
     else:
         print("Could not reach the goal", GOAL)
 
