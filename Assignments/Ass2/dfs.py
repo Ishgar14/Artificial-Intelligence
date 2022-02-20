@@ -1,7 +1,7 @@
 LEFT_BUCKET_CAPACITY = 4
 RIGHT_BUCKET_CAPACITY = 3
 
-GOAL = (2, 0)
+GOAL = (0, 2)
 RESULT = []
 
 def move_left_to_right(jug):
@@ -113,6 +113,7 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
     
     return False
 
+# This function prunes the nodes which can be reached directly by root (0, 0)
 def optimise(result: list[Node]) -> list[Node]:
     operations = get_available_operations((0, 0))
     for op in operations:
