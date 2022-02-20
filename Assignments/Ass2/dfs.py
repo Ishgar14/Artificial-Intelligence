@@ -1,7 +1,7 @@
 LEFT_BUCKET_CAPACITY = 4
 RIGHT_BUCKET_CAPACITY = 3
 
-GOAL = (0, 2)
+GOAL = (2, 0)
 RESULT = []
 
 def move_left_to_right(jug):
@@ -74,6 +74,17 @@ class Node:
         self.children: list[Node] = []
         self.operation_name = operation_name
 
+    def __eq__(self, other):
+        if isinstance(other, Node):
+            return self.jug == other.jug
+        elif isinstance(other, tuple):
+            return self.jug == other
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return str(self.jug)
+
 def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
     if maxdepth == 0:
         return False
@@ -102,12 +113,26 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
     
     return False
 
+def optimise(result: list[Node]) -> list[Node]:
+    operations = get_available_operations((0, 0))
+    for op in operations:
+        child = op((0, 0))
+        try:
+            index = result.index(child)
+            result = result[index:]
+        except ValueError:
+            pass
+    
+    return result
+
 def main():
     seed = Node((0, 0))
 
     if grow_tree(seed):
-        print("The full path is \nFrom (0, 0)")
+        print("The full path is")
+        print("From (0, 0)".rjust(49))
         result = list(reversed(RESULT))
+        result = optimise(result)
         for i, node in enumerate(result):
             print(f'Step {i + 1}   {node.operation_name.ljust(30)} => {node.jug}')
             
