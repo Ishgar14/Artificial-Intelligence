@@ -57,24 +57,25 @@ class Node:
 Board = list[list[Node]]
 
 def display_board(board, initial: Node, goal: Node) -> None:
-    print('', '=' * len(board[0]))
+    print('', '=' * len(board[0] * 3))
 
     for i, row in enumerate(board):
         print(end='|')
         for j, col in enumerate(row):
             if Node(i, j) == initial:
-                print(end='S')
+                ch='S'
             elif Node(i, j) == goal:
-                print(end='E')
+                ch='E'
             elif col == EMPTY:
-                print(end=' ')
+                ch=' '
             elif col == WALL:
-                print(end='#')
+                ch='#'
             elif col == SELECTED:
-                print(end='.')
+                ch='.'
+            print("{:>3}".format(ch), end='')
         print(end='|\n')
 
-    print('', '=' * len(board[0]))
+    print('', '=' * len(board[0]) * 3)
 
 def start(board, initial: Node, goal: Node) -> Node:
     nodes = [Node(initial.x, initial.y)]
