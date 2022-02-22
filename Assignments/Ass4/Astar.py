@@ -42,8 +42,11 @@ class Node:
 
             if x < 0 or y < 0:
                 ugly_neighbours.append((x, y))
-            if x >= len(board) or y >= len(board[0]):
+            elif x >= len(board) or y >= len(board[0]):
                 ugly_neighbours.append((x, y))
+            elif board[x][y] == WALL:
+                ugly_neighbours.append((x, y))
+
 
         for ugly in ugly_neighbours:
             neigh.remove(ugly)
@@ -59,8 +62,10 @@ def display_board(board, initial: Node, goal: Node) -> None:
     for i, row in enumerate(board):
         print(end='|')
         for j, col in enumerate(row):
-            if Node(i, j) == initial or Node(i, j) == goal:
-                print(end='@')
+            if Node(i, j) == initial:
+                print(end='S')
+            elif Node(i, j) == goal:
+                print(end='E')
             elif col == EMPTY:
                 print(end=' ')
             elif col == WALL:
@@ -91,14 +96,15 @@ def start(board, initial: Node, goal: Node) -> Node:
             previous.add(current)
         
         d_board[current.x][current.y] = SELECTED
+        print("\n\nCurrently selected ({}, {})".format(current.x, current.y))
         display_board(d_board, initial, goal)
-        print("Currently selected ({}, {})".format(current.x, current.y))
 
         if current == goal:
+            print("Reached goal!")
             break
 
         for neighbour in current.neighbours(board):
-            if neighbour not in previous and board[neighbour.x][neighbour.y] == EMPTY:
+            if neighbour not in previous:
                 nodes.append(neighbour)
         
     return current
