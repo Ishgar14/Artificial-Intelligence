@@ -1,0 +1,151 @@
+# Board Contents
+EMPTY = 0
+WALL = 1
+SELECTED = 2
+
+class Node:
+    def __init__(self, x, y, prev = None):
+        self.x = x
+        self.y = y
+        self.prev = prev
+    
+    def __eq__(self, other):
+        if isinstance(other, Node):
+            return self.x == other.x and self.y == other.y
+        elif isinstance(other, tuple):
+            return self.x == other[0] and self.y == other[1]
+    
+    def __repr__(self):
+        return str((self.x, self.y))
+    
+    def __hash__(self):
+        return (self.x, self.y).__hash__()
+
+    def man_dist(self, to) -> int:
+        return abs(self.x - to.x) + abs(self.y - to.y)
+
+    def heu(self, goal) -> int:
+        return self.man_dist(goal)
+
+    def neighbours(self, board) -> list:
+        neigh = [
+            # No diagonal neighbours
+            (self.x, self.y - 1), # Top
+            (self.x - 1, self.y), # Left
+            (self.x + 1, self.y), # Right
+            (self.x, self.y + 1), # Bottom
+        ]
+
+        ugly_neighbours = []
+        for n in neigh:
+            x, y = n
+
+            if x < 0 or y < 0:
+                ugly_neighbours.append((x, y))
+            if x >= len(board) or y >= len(board[0]):
+                ugly_neighbours.append((x, y))
+
+        for ugly in ugly_neighbours:
+            neigh.remove(ugly)
+
+        return [Node(n[0], n[1], self) for n in neigh]
+
+# Defining custom type
+Board = list[list[Node]]
+
+def display_board(board, initial: Node, goal: Node) -> None:
+    print('', '=' * len(board[0]))
+
+    for i, row in enumerate(board):
+        print(end='|')
+        for j, col in enumerate(row):
+            if Node(i, j) == initial or Node(i, j) == goal:
+                print(end='@')
+            elif col == EMPTY:
+                print(end=' ')
+            elif col == WALL:
+                print(end='#')
+            elif col == SELECTED:
+                print(end='.')
+        print(end='|\n')
+
+    print('', '=' * len(board[0]))
+
+def start(board, initial: Node, goal: Node) -> Node:
+    nodes = [Node(initial.x, initial.y)]
+    # Create a copy of board to display the steps of A*
+    d_board = []
+    for row in board:
+        d_board.append([])
+        for col in row:
+            d_board[-1].append(col)
+
+    previous = set()
+    while len(nodes) > 0:
+        nodes.sort(key = lambda n: n.heu(initial) + n.heu(goal))
+        current = nodes.pop(0)
+        
+        if current in previous:
+            continue
+        else:
+            previous.add(current)
+        
+        d_board[current.x][current.y] = SELECTED
+        display_board(d_board, initial, goal)
+        print("Currently selected ({}, {})".format(current.x, current.y))
+
+        if current == goal:
+            break
+
+        for neighbour in current.neighbours(board):
+            if neighbour not in previous and board[neighbour.x][neighbour.y] == EMPTY:
+                nodes.append(neighbour)
+        
+    return current
+
+# For test case validity check
+def safety_check(board, initial: tuple[int, int], goal: tuple[int, int]):
+    if board[initial[0]][initial[1]] == WALL:
+        raise ValueError("Initial Position cannot be a wall")
+    if board[goal[0]][goal[1]] == WALL:
+        raise ValueError("Goal Position cannot be a wall")
+    
+
+def main():
+    board = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0,],
+        [0, 1, 0, 0, 1, 1, 1, 1, 0,],
+        [0, 1, 0, 0, 0, 0, 0, 1, 0,],
+        [0, 0, 1, 1, 1, 1, 1, 1, 0,],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0,],
+    ]
+
+    initial = (0, 1)
+    goal = (4, 3)
+    safety_check(board, initial, goal)
+
+    # display_board(board, initial, goal)
+    # return
+
+    end = start(board, Node(initial[0], initial[1]), Node(goal[0], goal[1]))
+    print("\nThe best path is ")
+    path = []
+    while end:
+        path.append((end.x, end.y))
+        end = end.prev
+    
+    # Create a copy of board
+    d_board = []
+    for row in board:
+        d_board.append([])
+        for col in row:
+            d_board[-1].append(col)
+    
+    # mutate it with path found
+    for (x, y) in path:
+        d_board[x][y] = SELECTED
+    display_board(d_board, initial, goal)
+    
+
+if __name__ == '__main__':
+    main()
