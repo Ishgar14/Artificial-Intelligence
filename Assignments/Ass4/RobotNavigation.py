@@ -86,6 +86,7 @@ def start(board, initial: Node, goal: Node) -> Node:
         for col in row:
             d_board[-1].append(col)
 
+    # Actual A* Logic
     previous = set()
     while len(nodes) > 0:
         nodes.sort(key = lambda n: n.heu(initial) + n.heu(goal))
