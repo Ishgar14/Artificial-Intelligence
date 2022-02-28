@@ -115,6 +115,8 @@ def start(puzzle):
             best_score = score
             return start(board)
         else:
+            display_board(puzzle)
+            print(f"Heuristic is {heuristic(puzzle)}")
             print("Didn't get better score, backtracking...\n")
             board = revert(board, operation)
     
