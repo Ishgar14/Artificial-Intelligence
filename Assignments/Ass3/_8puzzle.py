@@ -78,6 +78,7 @@ def safe_get(puzzle, key):
     return '@'
 
 def display_board(puzzle: dict[int, int]):
+    print("The board looks like")
     print(
         str(safe_get(puzzle, 1)).center(3, ' ') + 
         str(safe_get(puzzle, 2)).center(3, ' ') +
@@ -101,55 +102,69 @@ def start(puzzle):
     if heuristic(puzzle) == heuristic(GOAL):
         return puzzle
     
-    display_board(puzzle)
-    print(f"Heuristic is {heuristic(puzzle)}")
     best_score = heuristic(puzzle)
 
     for operation in get_available_operations(puzzle):
         board = operation(puzzle)
         score = heuristic(board)
-        print(f"We {operation.__name__} the empty slot")
 
         if score >= best_score:
-            print("We got a better heuristic score, lets keep it\n")
+            print(f"We {operation.__name__} the empty slot")
+            display_board(puzzle)
+            print(f"Objective function value is {heuristic(puzzle)}")
+            print("We got a better objective score, lets go ahead\n")
+            print("=" * 40)
             best_score = score
             return start(board)
         else:
-            display_board(puzzle)
-            print(f"Heuristic is {heuristic(puzzle)}")
-            print("Didn't get better score, backtracking...\n")
             board = revert(board, operation)
     
+    print(" We hit a plateau! Stopping the algorithm ".center(80, '~'), sep='\n', end='\n\n')
     return puzzle
 
 def main():
-    print("Menu for initial configurations of board")
-    print("1. Optimal Solution")
-    print("2. Suboptimal Solution")
-    choice = int(input("Which initial configuration do you want?\n>").strip())
-
-    if choice == 1:
-        puzzle = {
+    STATE_GLOBAL = {
             1: 1, 2: 2, 3: 3,
             4: 8, 5: 6, 6: None,
             7: 7, 8: 5, 9: 4,
-        }
-    elif choice == 2:
-        puzzle = {
+    }
+    STATE_LOCAL = {
             1: 4, 2: None, 3: 7,
             4: 2, 5: 8, 6: 1,
             7: 3, 8: 6, 9: 5,
-        }
+    }
+    print("Menu for initial states of board")
+    print("1. State which can reach global maxima")
+    display_board(STATE_GLOBAL)
+    print("2. State which cannot reach global maxima")
+    display_board(STATE_LOCAL)
+    choice = int(input("Which initial state do you want?\n>").strip())
+
+    if choice == 1:
+        puzzle = STATE_GLOBAL
+    elif choice == 2:
+        puzzle = STATE_LOCAL
     else:
         print("Please enter a valid number!")
         main()
         exit()
 
-    print("The initial board configuration is ")
-    puzzle = start(puzzle)
-    print("The final board configuration achieved by hill climbing is ")
+    print("The initial board state is ")
     display_board(puzzle)
-    print(f"The heuristic of this board is {heuristic(puzzle)}")
+    print('=' * 40)
+    print("The goal is")
+    display_board(GOAL)
+    print('=' * 40)
+
+    puzzle = start(puzzle)
+    print("The final board state achieved by hill climbing is ")
+    display_board(puzzle)
+    print(f"The objective function value of this board is {heuristic(puzzle)}")
+
+    if puzzle != GOAL:
+        print("We could not reach final goal state👎")
+    else:
+        print("🎉We reached final goal state!🎉")
 
 
 if __name__ == '__main__':

@@ -77,9 +77,14 @@ class Node:
 def grow_tree(parent: Node, previous = {(0, 0)}) -> bool:
     queue = [parent]
 
+    opened = []
+    closed = []
+    level = 1
+
     while len(queue) != 0:
         node = queue.pop(0) # Remove first elemnt from queue
-        print("Opened node", node.jug)
+        
+        opened.append(node.jug)
 
         operations = get_available_operations(node.jug)
         # Iterate over all operations for current node
@@ -87,8 +92,7 @@ def grow_tree(parent: Node, previous = {(0, 0)}) -> bool:
         for op in operations:
             child_jug = op(node.jug)
             child = Node(child_jug, node, get_operation_name(op))
-            
-            print("Created a closed child node", child.jug)
+            closed.append(child_jug)
 
             if child_jug == GOAL:
                 RESULT.append(child)
@@ -100,6 +104,11 @@ def grow_tree(parent: Node, previous = {(0, 0)}) -> bool:
                 previous.add(child_jug)
             
             queue.append(child)
+        
+        print(f" At breadth level {level} ".center(40, '='))
+        print("Opened list: ", opened)
+        print("Closed list: ", closed, end='\n\n')
+        level += 1
 
     return False
 

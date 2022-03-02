@@ -4,24 +4,24 @@ RIGHT_BUCKET_CAPACITY = 3
 GOAL = (0, 2)
 RESULT = []
 
-def move_left_to_right(jug):
+def move_left_to_right(jug) -> tuple[int, int]:
     allowed_space = min(RIGHT_BUCKET_CAPACITY - jug[1], jug[0])
     return (jug[0] - allowed_space, jug[1] + allowed_space)
 
-def move_right_to_left(jug):
+def move_right_to_left(jug) -> tuple[int, int]:
     allowed_space = min(LEFT_BUCKET_CAPACITY - jug[0], jug[1])
     return (jug[0] + allowed_space, jug[1] - allowed_space)
 
-def empty_left(jug):
+def empty_left(jug) -> tuple[int, int]:
     return (0, jug[1])
 
-def empty_right(jug):
+def empty_right(jug) -> tuple[int, int]:
     return (jug[0], 0)
 
-def fill_left(jug):
+def fill_left(jug) -> tuple[int, int]:
     return (LEFT_BUCKET_CAPACITY, jug[1])
 
-def fill_right(jug):
+def fill_right(jug) -> tuple[int, int]:
     return (jug[0], RIGHT_BUCKET_CAPACITY)
 
 def get_available_operations(jug):
@@ -85,15 +85,26 @@ class Node:
     def __repr__(self) -> str:
         return str(self.jug)
 
-def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
+def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10, 
+            opened: list[tuple[int, int]] = [], closed: list[tuple[int, int]] = []
+        ) -> bool:
+    
     if maxdepth == 0:
         return False
 
     operations = get_available_operations(node.jug)
+
+    for _op in operations:
+        closed.append(_op(node.jug))
+    opened.append(node.jug)
+    closed = [val for i, val in enumerate(closed) if val not in opened and val not in closed[:i]]
+
+    print("\n", f" At depth level {10 - maxdepth} ".center(40, '='), sep='')
+    print("Opened list: ", opened)
+    print("Closed list: ", closed, end='\n\n')
+
     for op in operations:
         child = op(node.jug)
-
-        print("Checking node", child)
         
         if child == GOAL:
             RESULT.append(Node(GOAL, get_operation_name(op)))
@@ -103,16 +114,13 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
             continue
         else:
             previous.add(child)
-            pass
 
         node.children.append(Node(child, get_operation_name(op)))
-        if grow_tree(node.children[-1], previous, maxdepth - 1):
+        if grow_tree(node.children[-1], previous, maxdepth - 1, opened, closed):
             RESULT.append(node.children[-1])
             return True
         else:
-            print("Could not find better child, backtracking ....")
             node.children.pop()
-            pass
     
     return False
 
