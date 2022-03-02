@@ -89,9 +89,15 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
     if maxdepth == 0:
         return False
 
+    opened = []
+    closed = []
+
     operations = get_available_operations(node.jug)
     for op in operations:
         child = op(node.jug)
+
+        opened.append(child)
+        print("Checking node", child)
         
         if child == GOAL:
             RESULT.append(Node(GOAL, get_operation_name(op)))
@@ -108,6 +114,7 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
             RESULT.append(node.children[-1])
             return True
         else:
+            print("Could not find better child, backtracking ....")
             node.children.pop()
             pass
     
@@ -130,6 +137,7 @@ def main():
     seed = Node((0, 0))
 
     if grow_tree(seed):
+        print('=' * 40)
         print("The full path is")
         print("From (0, 0)".rjust(49))
         result = list(reversed(RESULT))
