@@ -89,14 +89,10 @@ def grow_tree(node: Node, previous = {(0, 0)}, maxdepth = 10) -> bool:
     if maxdepth == 0:
         return False
 
-    opened = []
-    closed = []
-
     operations = get_available_operations(node.jug)
     for op in operations:
         child = op(node.jug)
 
-        opened.append(child)
         print("Checking node", child)
         
         if child == GOAL:
