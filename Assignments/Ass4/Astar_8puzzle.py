@@ -170,8 +170,10 @@ def main():
         7: 7, 8: 5, 9: 4,
     }
 
-    print("The initial board configuration is ")
+    print("The initial state is ")
     display_board(puzzle)
+    print("The goal state is ")
+    display_board(GOAL)
     node = start(puzzle)
 
         
