@@ -22,7 +22,7 @@ class Node:
         return heuristic(self.board)
 
     def __repr__(self):
-        return str(heuristic(self.board))
+        return str(self.heu())
 
     def heu(self) -> int:
         return self.steps + heuristic(self.board)
@@ -127,15 +127,20 @@ def display_board(puzzle: dict[int, int]):
 
 def start(puzzle) -> Node:
     root = Node(puzzle, 0)
-    queue = [root]
+    opened = []
+    closed = [root]
     steps = 0
     previous = set()
     best_score = 1000
 
-    while len(queue) > 0:
+    while len(closed) > 0:
+        print("=" * 40)
+        print("Opened:", opened)
+        print("Closed:", closed)
         steps += 1
-        queue.sort(key=lambda n: n.heu())
-        current = queue.pop(0)
+        closed.sort(key=lambda n: n.heu())
+        current = closed.pop(0)
+        opened.append(current)
         score = heuristic(current.board)
 
         if score == 0:
@@ -152,7 +157,7 @@ def start(puzzle) -> Node:
 
         for operation in get_available_operations(current.board):
             child = Node(operation(current.board.copy()), steps, current, operation)
-            queue.append(child)
+            closed.append(child)
 
 
     return current
@@ -167,7 +172,6 @@ def main():
 
     print("The initial board configuration is ")
     display_board(puzzle)
-    print(f"The heuristic of this board is {heuristic(puzzle)}")
     node = start(puzzle)
 
         
@@ -185,8 +189,7 @@ def main():
             print(get_operation_name(node.operation))
 
         display_board(node.board)
-        print(f"The heuristic of this board is {heuristic(node.board)}")
-        # print(f"The f(x) of this board is {node.heu()}")
+        print(f"The objective function score of this board is {heuristic(node.board) + i + 1}")
 
     if heuristic(path[-1].board) != 0:
         print("Not found ideal board position")
