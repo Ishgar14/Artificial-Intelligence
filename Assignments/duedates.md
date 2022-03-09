@@ -25,3 +25,12 @@ Use two different initial configurations such that
 2. A initial configuration that leads to the global maximum being reached, that is the objective function reaches a maximum value of 8, which means all the tiles are in position.
 
 Submission on `16th March` (Wednesday)
+
+# Experiment 4
+
+1. Greedy Best First Search for 8 puzzle
+2. A* for 8 puzzle
+3. Cities Distance Problem
+4. Robot Navigation
+
+<!-- Submission on `` -->
