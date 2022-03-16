@@ -1,4 +1,4 @@
-Board = list[list[str]]
+Board = list[str]
 RESULTS: list[Board] = []
 
 
@@ -16,16 +16,20 @@ def display_board(board: Board) -> None:
     for word in board:
         print(' '.join(word))
 
+
 def row_words(grid: Board) -> list[str]:
     return [row for row in grid]
 
+
 def col_words(grid: Board) -> list[str]:
     return [col_str(grid, i) for i in range(len(grid))]
+
 
 def all_words_of(grid: Board) -> list[str]:
     words = row_words(grid)
     words.extend(col_words(grid))
     return words
+
 
 def generate_trie(words: list[str]) -> dict:
     root = {}
@@ -62,24 +66,14 @@ def word_exists(word: str, trie: dict) -> bool:
     return True
 
 
-def start(size: int, words: list[str], trie: dict, grid: Board = [], 
-        filter_duplicate_words: bool = False, max_count: int = 50) -> Board:
+def start(size: int, words: list[str], trie: dict, grid: Board = [],
+          filter_duplicate_words: bool = False, max_count: int = 50) -> Board:
     # Pick the next word
     # check if vertical buckets for that word are not empty
     # if any bucket is empty then backtrack
     # else proceed further
 
     if len(grid) == size:
-        column_words = [col_str(grid, i) for i in range(size)]
-        column_words_exist = [
-            word_exists(word, trie)
-            for word in column_words
-        ]
-
-        if not all(column_words_exist):
-            grid.pop()
-            return None
-
         return grid
 
     for word in words:
@@ -104,7 +98,6 @@ def start(size: int, words: list[str], trie: dict, grid: Board = [],
                 grid.pop()
 
 
-
 def main() -> None:
     words = load_file()
     start(4, words, generate_trie(words))
@@ -120,6 +113,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-    # print(word_exists("goat", load_file()) + 1)
-    # from pprint import pprint
-    # print(generate_trie(load_file()))
