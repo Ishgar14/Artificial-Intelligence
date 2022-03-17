@@ -57,7 +57,7 @@ class Node:
 Board = list[list[Node]]
 
 def display_board(board, initial: Node, goal: Node) -> None:
-    print('', '=' * len(board[0] * 3))
+    print('', '-' * len(board[0] * 3))
 
     for i, row in enumerate(board):
         print(end='|')
@@ -75,10 +75,11 @@ def display_board(board, initial: Node, goal: Node) -> None:
             print("{:>3}".format(ch), end='')
         print(end='|\n')
 
-    print('', '=' * len(board[0]) * 3)
+    print('', '-' * len(board[0]) * 3)
 
 def start(board, initial: Node, goal: Node) -> Node:
-    nodes = [Node(initial.x, initial.y)]
+    opened = []
+    closed = [Node(initial.x, initial.y)]
     # Create a copy of board to display the steps of A*
     d_board = []
     for row in board:
@@ -88,9 +89,10 @@ def start(board, initial: Node, goal: Node) -> Node:
 
     # Actual A* Logic
     previous = set()
-    while len(nodes) > 0:
-        nodes.sort(key = lambda n: n.heu(initial) + n.heu(goal))
-        current = nodes.pop(0)
+    while len(closed) > 0:
+        closed.sort(key = lambda n: n.heu(initial) + n.heu(goal))
+        current = closed.pop(0)
+        opened.append(current)
         
         if current in previous:
             continue
@@ -98,6 +100,9 @@ def start(board, initial: Node, goal: Node) -> Node:
             previous.add(current)
         
         d_board[current.x][current.y] = SELECTED
+        print('=' * 40)
+        print("Open List:", opened)
+        print("Close List:", closed)
         print("\n\nCurrently selected ({}, {})".format(current.x, current.y))
         display_board(d_board, initial, goal)
 
@@ -107,7 +112,7 @@ def start(board, initial: Node, goal: Node) -> Node:
 
         for neighbour in current.neighbours(board):
             if neighbour not in previous:
-                nodes.append(neighbour)
+                closed.append(neighbour)
         
     return current
 
