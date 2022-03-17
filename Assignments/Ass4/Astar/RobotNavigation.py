@@ -128,8 +128,8 @@ def main():
         [0, 0, 0, 0, 0, 0, 0, 0, 0,],
     ]
 
-    initial = (0, 1)
-    goal = (4, 3)
+    initial = (3, 0)
+    goal = (2, 5)
     safety_check(board, initial, goal)
 
     # display_board(board, initial, goal)
