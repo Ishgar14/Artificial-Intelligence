@@ -77,6 +77,9 @@ def objective(city, parent) -> int:
 
 def main() -> None: 
     generate_map()
+    print('=' * 40)
+    print("Starting city is Latur")
+    print("Destination city is Navi Mumbai")
     # from pprint import pprint
     # pprint(GRAPH)
 
