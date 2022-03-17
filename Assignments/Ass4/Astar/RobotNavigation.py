@@ -137,9 +137,6 @@ def main():
     goal = (2, 5)
     safety_check(board, initial, goal)
 
-    # display_board(board, initial, goal)
-    # return
-
     end = start(board, Node(initial[0], initial[1]), Node(goal[0], goal[1]))
     print("\nThe best path is ")
     path = []

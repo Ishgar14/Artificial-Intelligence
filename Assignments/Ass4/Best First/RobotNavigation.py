@@ -80,14 +80,14 @@ def display_board(board, initial: Node, goal: Node) -> None:
 def start(board, initial: Node, goal: Node) -> Node:
     opened = []
     closed = [Node(initial.x, initial.y)]
-    # Create a copy of board to display the steps of A*
+    # Create a copy of board to display the steps of Best First Search
     d_board = []
     for row in board:
         d_board.append([])
         for col in row:
             d_board[-1].append(col)
 
-    # Actual A* Logic
+    # Actual Best First Logic
     previous = set()
     while len(closed) > 0:
         closed.sort(key = lambda n: n.heu(goal))
@@ -136,9 +136,6 @@ def main():
     initial = (3, 0)
     goal = (2, 5)
     safety_check(board, initial, goal)
-
-    # display_board(board, initial, goal)
-    # return
 
     end = start(board, Node(initial[0], initial[1]), Node(goal[0], goal[1]))
     print("\nThe best path is ")
