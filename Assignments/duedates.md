@@ -28,9 +28,15 @@ Submission on `16th March` (Wednesday)
 
 # Experiment 4
 
-1. Greedy Best First Search for 8 puzzle
-2. A* for 8 puzzle
-3. Cities Distance Problem
-4. Robot Navigation
+Implement the following algorithms:
+1. A* Algorithm
+- Robot Navigation
+- City Distance Problem
+- 8 puzzle
 
-<!-- Submission on `` -->
+2. Best First Search
+- Robot Navigation
+- City Distance Problem
+- 8 puzzle
+
+Submission on `30th Match` (Wednesday)
