@@ -49,13 +49,13 @@ def display_transform(operand: str, state: State) -> str:
     return result
 
 
-def fact_estimate(op1: str, op2: str, result: str) -> State:
+def fact_estimate(operation: str, op1: str, op2: str, result: str) -> State:
     # This function takes in operands and result
     # and returns a State of all facts (fixed values of certain letters)
 
     facts = {}
 
-    if len(op1) == len(op2) and len(op1) < len(result):
+    if len(op1) == len(op2) and len(op1) < len(result) and operation == '+':
         difference = len(result) - len(op1)
         for i in range(difference):
             facts[result[i]] = 1
@@ -122,7 +122,7 @@ def start(tokens: list[str], facts: State, alphabet_pos: int = 0, state: State =
 def main() -> None:
     eq = input("Enter your equation: ").replace(" ", "")
     tokens = tokenise(eq)
-    op1, _, op2, _, result = tokens
+    op1, operation, op2, _, result = tokens
     padding_len = max([len(op1), len(op2), len(result)])
 
     # Print the original equation
@@ -142,7 +142,7 @@ def main() -> None:
         print("So we cant have distinct values for each letter")
         exit()
 
-    facts = fact_estimate(op1, op2, result)
+    facts = fact_estimate(operation, op1, op2, result)
     if facts:
         print(" The facts are ".center(40, '='))
         for key, value in facts.items():
