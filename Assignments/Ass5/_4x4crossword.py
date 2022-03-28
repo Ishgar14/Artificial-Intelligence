@@ -4,7 +4,7 @@ RESULTS: list[Board] = []
 
 def load_file(fname='./gistfile1.txt') -> list[str]:
     with open(fname) as file:
-        return [line.strip() for line in file.readlines()]
+        return [line.strip() for line in file.readlines() if line.strip()]
 
 
 def col_str(grid: Board, col: int) -> str:
@@ -92,15 +92,15 @@ def start(size: int, words: list[str], trie: dict, grid: Board = [],
                 grid.pop()
                 continue
 
-        if val := start(size, words, trie, grid):
+        if val := start(size, words, trie, grid, filter_duplicate_words, max_count):
             if val not in RESULTS:
                 RESULTS.append(val.copy())
-                grid.pop()
+        grid.pop()
 
 
 def main() -> None:
     words = load_file()
-    start(4, words, generate_trie(words))
+    start(4, words, generate_trie(words), filter_duplicate_words=True, max_count=10)
 
     if len(RESULTS) == 0:
         print("Could not find any such combination")
