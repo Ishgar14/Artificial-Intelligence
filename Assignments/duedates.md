@@ -39,4 +39,12 @@ Implement the following algorithms:
 - City Distance Problem
 - 8 puzzle
 
-Submission on `30th Match` (Wednesday)
+Submission on `6th April` (Wednesday)
+
+# Experiment 5
+
+Implement the following CSP problems:
+
+- Cryptarithmetic problem
+- Map coloring problem
+- Crossword puzzle
