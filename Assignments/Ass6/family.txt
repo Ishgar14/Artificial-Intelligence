@@ -1,0 +1,38 @@
+father(dashrath, ram).
+father(ram, luv).
+father(ram, kush).
+father(janak, sita).
+mother(sita, luv).
+mother(sita, kush).
+
+grandfather(X, Y):- father(X, Z), father(Z, Y).
+grandmother(X, Y):- father(X, Z), mother(Z, Y).
+
+-----------------------------------------------
+
+
+?- consult("C:/ / /family.pl").
+
+?- grandfather(X,Y).
+
+X = dashrath Y = luv
+X = dashrath Y = kush
+X = janak Y = luv
+X = janak Y = kush
+
+-----------------------------
+
+father(Sachin, Arjun).
+father(Sachin, Sara).
+mother(Anjali, Arjun).
+mother(Anjali, Sara).
+father(Ramesh, Sachin).
+
+
+uncle(X,Y):-
+aunt(X,Y):-
+
+chacha(X,Y):-
+mama(X,Y):-
+fufi(X,Y):-
+maasi(X,Y):-
