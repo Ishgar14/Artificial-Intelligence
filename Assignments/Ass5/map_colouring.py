@@ -52,9 +52,11 @@ def start(graph: Graph, node_colors: dict[str, str] = {}):
 
         nc = neighbour_colors(key, graph, node_colors)
         available_colours = [color for color in COLORS if color not in nc.values()]
+        print(f"Colours available for {key} are", available_colours)
 
         for c in available_colours:
             node_colors[key] = c
+            print(f"Applying colour {c} to node {key}\n")
             
             if color_list := start(graph, node_colors):
                 if len(color_list) == len(graph):
@@ -65,11 +67,18 @@ def start(graph: Graph, node_colors: dict[str, str] = {}):
 
 def main() -> None: 
     graph = generate_graph()
+
+    print(" Structure of Graph ".center(40, '='))
+    for node, neighbours in graph.items():
+        print(f"Node {node} has neighbours:", neighbours)
+    print('\n', ' Applying Colours '.center(40, '='), sep='')
+
     colors = start(graph)
     # from pprint import pprint
     # pprint(graph)
     # pprint(colors)
 
+    print('\n', " After colouring ".center(40, '='), sep='')
     for node, color in colors.items():
         print(f"Node {node} gets {color:<6} colour")
 
