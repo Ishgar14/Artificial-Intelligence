@@ -50,4 +50,8 @@ Implement the following CSP problems:
 - Crossword puzzle
 
 
-Submission on ``
+Submission on `22nd April` (Friday)
+
+# Experiment 6
+
+Submission on `29` (Friday)
