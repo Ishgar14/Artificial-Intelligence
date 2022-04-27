@@ -32,7 +32,8 @@ mother(X, Y) :- female(X), parent(X, Y).
 husband(X, Y) :- male(X), parent(X, Z), parent(Y, Z).
 wife(X, Y) :- husband(Y, X).
 
-stepmother(X, Y) :- female(X), father(Z, Y), husband(Z, X), not(parent(X, Y)).
+stepmother(X, Y) :- female(X), father(Z, Y), husband(Z, X).
+    /*, not(parent(X, Y)).*/
 
 sibling(ram, bharat).
 sibling(ram, lakshman).
@@ -49,4 +50,4 @@ grandfather(X, Y):- father(X, Z), mother(Z, Y).
 grandmother(X, Y):- mother(X, Z), father(Z, Y).
 grandmother(X, Y):- mother(X, Z), mother(Z, Y).
 
-stepgrandmother(X, Y) :- parent(Y, Z), aunt(X, Z).
+/*stepgrandmother(X, Y) :- parent(Y, Z), aunt(X, Z).*/
