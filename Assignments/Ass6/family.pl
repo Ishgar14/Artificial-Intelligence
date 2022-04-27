@@ -1,49 +1,47 @@
-father(dashrath, ram).
-father(dashrath, lakshman).
-father(dashrath, shatrugan).
-father(dashrath, bharat).
+male(dashrath).
+male(ram).
+male(lakshman).
+male(shatrugan).
+male(bharat).
+male(janak).
 
-father(janak, sita).
-father(ram, luv).
-father(ram, kush).
+female(kaushalya).
+female(kaikeyi).
+female(sumitra).
+female(sita).
+female(sunaina).
 
-husband(dashrath, kaushalya).
-husband(dashrath, kaikeyi).
-husband(dashrath, sumitra).
-husband(janak, sunaina).
-husband(ram, sita).
-husband(X, Y) :-    father(X, Z), mother(Y, Z).
-wife(X, Y) :-       husband(Y, X).
+parent(dashrath, ram).
+parent(dashrath, bharat).
+parent(dashrath, lakshman).
+parent(dashrath, shatrugan).
 
-mother(kaushalya, ram).
-mother(kaikeyi, bharat).
-mother(sumitra, lakshman).
-mother(sumitra, shatrugan).
-mother(sita, luv).
-mother(sita, kush).
+parent(kaushalya, ram).
+parent(kaikeyi, bharat).
+parent(sumitra, lakshman).
+parent(sumitra, shatrugan).
 
-brother(ram, bharat).
-brother(ram, lakshman).
-brother(ram, shatrugan).
-brother(X, Y) :- brother(Y, X).
-brother(X, Y) :- brother(X, Z), brother(Z, Y).
+parent(ram, luv).
+parent(ram, kush).
+parent(sita, luv).
+parent(sita, kush).
 
-parent(X, Y) :- father(X, Y).
-parent(X, Y) :- mother(X, Y).
+father(X, Y) :- male(X), parent(X, Y).
+mother(X, Y) :- female(X), parent(X, Y).
 
+husband(X, Y) :- male(X), parent(X, Z), parent(Y, Z).
+wife(X, Y) :- husband(Y, X).
 
-chacha(X, Y):-      brother(X, Z), father(Z, Y).
-mama(X, Y):-        brother(X, Z), mother(Z, Y).
+stepmother(X, Y) :- female(X), father(Z, Y), husband(Z, X), not(parent(X, Y)).
 
-chachi(X, Y):-      sister(X, Z), father(Z, Y).
-mami(X, Y):-        sister(X, Z), mother(Z, Y).
+sibling(ram, bharat).
+sibling(ram, lakshman).
+sibling(ram, shatrugan).
+sibling(X, Y) :- sibling(Y, X).
 
-uncle(X, Y) :-      chacha(X, Y).
-uncle(X, Y) :-      mama(X, Y).
-
-aunt(X, Y) :-       chachi(X, Y).
-aunt(X, Y) :-       mami(X, Y).
-
+brother(X, Y) :- male(X), sibling(X, Y).
+brotherinlaw(X, Y) :- male(X), sibling(Y, Z), husband(X, Z).
+sisterinlaw(X, Y) :- female(X), sibling(Y, Z), husband(X, Z).
 
 grandfather(X, Y):- father(X, Z), father(Z, Y).
 grandfather(X, Y):- father(X, Z), mother(Z, Y).
