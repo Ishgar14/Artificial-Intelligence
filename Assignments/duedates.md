@@ -54,4 +54,6 @@ Submission on `22nd April` (Friday)
 
 # Experiment 6
 
+Use PROLOG to create a family tree and make rules for multiple relations
+
 Submission on `29` (Friday)
